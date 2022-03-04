@@ -6,13 +6,14 @@
 #include <string.h>
 using namespace std;
 int n, k;
+char x;
 vector<int> a(50);
 void in()
 {
     for (int i = 1; i <= k; i++)
     {
-        // cout << char(i + 64);
-        cout << i;
+        cout << char(a[i] + 64);
+        // cout << i;
     }
     cout << endl;
 }
@@ -23,15 +24,14 @@ void Try(int i)
         a[i] = j;
         if (i == k)
         {
-            // in();
+             in();
         }
         else
-            Try(i + 1);
+           Try(i + 1);
     }
 }
 void solve()
 {
-    char x;
     cin >> x >> k;
     n = x - 64;
     a[0] = 1;
