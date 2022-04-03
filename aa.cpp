@@ -1,76 +1,92 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <stack>
 #include <math.h>
 #include <string.h>
+#include <stack>
+#include <queue>
+#include <set>
+#define maxx 105
 using namespace std;
-int n, k;
-vector<int> a(50), b(50);
-stack<vector<int>> st;
-void show()
-{
-    vector<int> tmp;
-    for (int i = 0; i < n; i++)
-    {
-        if (b[i] == 1)
-        {
-            tmp.push_back(a[i]);
+
+int adj[50][50], trace[50], vis[50];
+int n, s, t;
+bool hPath = false;
+
+void init() {
+    cin >> n >> s >> t;
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            cin >> adj[i][j];
         }
     }
-    st.push(tmp);
 }
-void Try(int i, int sum)
-{
-    if (sum > k)
+
+void findPath(int i) {
+    if (i == s) return;
+    cout << trace[i] << " ";
+    findPath(trace[i]);
+}
+
+void dfs(int u) {
+    vis[u] = 1;
+    if (hPath) {
         return;
-    for (int j = 0; j <= 1; j++)
+    }
+    if (u == t) //trùng điểm đích
     {
-        b[i] = j;
-        sum += a[i] * j;
-        if (i == n - 1)
-        {
-            if (sum == k)
-                show();
-        }
-        else
-        {
-            Try(i + 1, sum);
+        hPath = true;
+        return;
+    }
+    for (int i = 1; i <= n; i++) {
+        if (adj[u][i] && !vis[i]) {
+            trace[i] = u;
+            dfs(i);
         }
     }
 }
-void solve()
-{
-    cin >> n >> k;
-    for (int i = 0; i < n; i++)
-    {
-        cin >> a[i];
-    }
-    sort(a.begin(), a.begin() + n);
-    Try(0, 0);
-    if (st.size() == 0)
-        cout << -1;
-    else
-        while (st.size() > 0)
-        {
-            vector<int> tmp = st.top();
-            cout << "[";
-            for (int i = 0; i < tmp.size() - 1; i++)
-            {
-                cout << tmp[i] << " ";
+
+void bfs(int u) {
+    queue<int> q;
+    q.push(u);
+    vis[u] = 1;
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        if (u == t) {
+            hPath = true;
+            return;
+        }
+        for (int i = 1; i <= n; i++) {
+            if (adj[u][i] && !vis[i]) {
+                vis[i] = 1;
+                trace[i] = u;
+                q.push(i);
             }
-            cout << tmp[tmp.size() - 1] << "] ";
-            st.pop();
         }
-}
-int main()
-{
-    int t = 1;
-    cin >> t;
-    while (t--)
-    {
-        solve();
-        cout << endl;
     }
-    return 0;
+}
+
+void solve() {
+    dfs(s);
+    if (!hPath) {
+        cout << "no path" << "\n";
+        return;
+    }
+    cout << "DFS path: " << t << " ";
+    findPath(t);
+    cout << "\n";
+
+    memset(vis, 0, sizeof(vis));
+    memset(trace, 0, sizeof(trace));
+
+    hPath = false;
+    bfs(s);
+    cout << "BFS path: " << t << " ";
+    findPath(t);
+}
+
+int main() {
+    init();
+    solve();
 }

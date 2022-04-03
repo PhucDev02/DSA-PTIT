@@ -35,9 +35,7 @@
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
-      "args": [
-        ""
-      ],
+      "args": [],
       "stopAtEntry": false,
       "cwd": "d:/Kì 4/DSA/CodePTIT/DSA-PTIT",
       "environment": [],
