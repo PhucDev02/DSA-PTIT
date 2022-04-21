@@ -7,48 +7,58 @@
 #include <queue>
 #include <map>
 #include <sstream>
-#define ll long long
 using namespace std;
 void solve()
 {
     int n;
     cin >> n;
-    vector<int> a(n);
-    for (int i = 0; i < n; i++)
-        cin >> a[i];
-    vector<int> l(n), r(n);
-    stack<int> s;
+    int a[n];
     for (int i = 0; i < n; i++)
     {
-        while (s.size() != 0 && a[s.top()] >= a[i])
+        cin >> a[i];
+    }
+    int smaller[n], greater[n];
+    stack<int> s;
+    for (int i = n - 1; i >= 0; i--)
+    {
+        while (s.size() && a[i] >= a[s.top()])
         {
             s.pop();
         }
         if (s.size() != 0)
-            l[i] = s.top()+1;
-        else l[i]=0;
+            greater[i] = s.top();
+        else
+            greater[i] = -1;
         s.push(i);
     }
     while (s.size() != 0)
         s.pop();
     for (int i = n - 1; i >= 0; i--)
     {
-        while (s.size() != 0 && a[s.top()] >= a[i])
+        while (s.size() && a[s.top()] >= a[i])
         {
             s.pop();
         }
-        if (s.size() != 0)
-            r[i] = s.top()-1;
-        else r[i]=n-1;
+        if (s.size())
+            smaller[i] = s.top();
+        else
+            smaller[i] = -1;
         s.push(i);
     }
-    int res = 1;
     for (int i = 0; i < n; i++)
     {
-        if (r[i] - l[i] + 1 >= a[i])
-            res = max(res, a[i]);
+        if (greater[i] == -1)
+        {
+            cout << -1 << " ";
+        }
+        else
+        {
+            if (smaller[greater[i]] == -1)
+                cout << -1 << " ";
+            else
+                cout << a[smaller[greater[i]]] << " ";
+        }
     }
-    cout << res;
 }
 int main()
 {

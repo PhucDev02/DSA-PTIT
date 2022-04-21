@@ -14,10 +14,8 @@ void solve()
     cin >> n;
     vector<int> a(n), r(n);
     stack<int> st;
-    for (int i = 0; i < n; i++)
+    for (int i=0;i<n;i++)
         cin >> a[i];
-    cout << st.size();
-
     for (int i = n - 1; i >= 0; i--)
     {
         while (st.size() && st.top() <= a[i])
