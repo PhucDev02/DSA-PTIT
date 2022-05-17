@@ -1,62 +1,92 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <math.h>
-#include <string.h>
-#include <stack>
-#include <queue>
-#include <map>
-#include <sstream>
-#define ll long long
+#include <bits/stdc++.h>
 using namespace std;
+#define inf 1000000007
+int ds[300][300];
+vector<pair<int, int>> trace; // first luu cost,second luu dinh truoc
+vector<int> check;
+int E, V;
+int s;
+void init()
+{
+    cin >> V >> s;
+    trace.resize(V + 1, {inf, 0});
+    check.resize(V + 1, 0);
+
+    for (int i = 1; i <= V; i++)
+    {
+        for (int j = 1; j <= V; j++)
+        {
+            cin >> ds[i][j];
+        }
+    }
+    trace[1] = {0, 0};
+}
+void func(int count)
+{
+    int u;
+    int tmp = inf;
+    for (int i = 1; i <= V; i++)
+    {
+        // cout<<i<<" "<<trace[i].first<<" "<<trace[i].second<<endl;
+        if (trace[i].first < tmp && check[i] == 0)
+        {
+            u = i;
+            tmp = trace[i].first;
+        }
+    }
+    check[u] = 1;
+    // cout<<"tmp"<<tmp<<" u "<<u<<endl;
+
+    for (int v = 1; v <= V; v++)
+    {
+        if (check[v] == 0 && ds[u][v] != 0) // neu chua check
+        {
+            if (trace[u].first + ds[u][v] < trace[v].first) // kiem tra cost
+            {
+                trace[v].first = trace[u].first + ds[u][v];
+                trace[v].second = u;
+            }
+        }
+    }
+    if (count == V)
+        return;
+    func(count + 1);
+}
 void solve()
 {
-    int n;
-    cin >> n;
-    vector<int> a(n);
-    for (int i = 0; i < n; i++)
-        cin >> a[i];
-    vector<int> l(n), r(n);
-    stack<int> s;
-    for (int i = 0; i < n; i++)
+
+    init();
+    func(1);
+    trace[1].second = 1;
+    for (int i = 1; i <= V; i++)
     {
-        while (s.size() != 0 && a[s.top()] >= a[i])
+        cout << "K/c 1 -> " << i << " = ";
+        if (trace[i].first == inf)
         {
-            s.pop();
+            cout<<"INF;\n";
         }
-        if (s.size() != 0)
-            l[i] = s.top()+1;
-        else l[i]=0;
-        s.push(i);
-    }
-    while (s.size() != 0)
-        s.pop();
-    for (int i = n - 1; i >= 0; i--)
-    {
-        while (s.size() != 0 && a[s.top()] >= a[i])
+        else
         {
-            s.pop();
+            cout << trace[i].first << "; ";
+            int x = trace[i].second;
+            cout << i << " <- ";
+            while (x != s)
+            {
+                cout << x << " <- ";
+                x = trace[x].second;
+            }
+            cout << 1 << endl;
         }
-        if (s.size() != 0)
-            r[i] = s.top()-1;
-        else r[i]=n-1;
-        s.push(i);
     }
-    int res = 1;
-    for (int i = 0; i < n; i++)
-    {
-        if (r[i] - l[i] + 1 >= a[i])
-            res = max(res, a[i]);
-    }
-    cout << res;
 }
 int main()
 {
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();
         cout << endl;
     }
+    return 0;
 }
